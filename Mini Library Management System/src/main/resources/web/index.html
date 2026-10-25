@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f7fb">
+  <title>Mini Library | Library management</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Main navigation">
+      <a class="brand" href="#dashboard" aria-label="Mini Library home">
+        <span class="brand-mark" aria-hidden="true">M</span>
+        <span><strong>Mini Library</strong><small>Management system</small></span>
+      </a>
+      <div class="nav-label">Workspace</div>
+      <nav class="nav-list">
+        <button class="nav-item active" data-view="dashboard"><span aria-hidden="true">▦</span> Dashboard</button>
+        <button class="nav-item" data-view="books"><span aria-hidden="true">▤</span> Books</button>
+        <button class="nav-item" data-view="members"><span aria-hidden="true">♙</span> Members</button>
+        <button class="nav-item" data-view="circulation"><span aria-hidden="true">↔</span> Circulation</button>
+        <button class="nav-item" data-view="reports"><span aria-hidden="true">▥</span> Reports</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="side-note"><span class="status-dot"></span><span>Library is ready<br><small>Manage your collection</small></span></div>
+        <span class="side-version">MCA mini project · Oracle PL/SQL + Python</span>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <div class="mobile-brand"><span class="brand-mark">M</span><strong>Mini Library</strong></div>
+        <div class="breadcrumbs"><span>Workspace</span><span aria-hidden="true">/</span><strong id="page-heading">Dashboard</strong></div>
+        <div class="top-actions">
+          <button class="button button-secondary test-connection-button" id="test-connection" type="button">Test Oracle</button>
+          <label class="mode-control" for="data-mode">
+            <span>Data source</span>
+            <select id="data-mode" aria-label="Choose data source">
+              <option value="demo">Demo mode</option>
+              <option value="oracle">Oracle database</option>
+            </select>
+          </label>
+          <span class="avatar" aria-label="Library administrator">LA</span>
+        </div>
+      </header>
+
+      <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+
+      <section class="view active" id="view-dashboard" aria-labelledby="dashboard-title">
+        <div class="page-intro">
+          <div><p class="eyebrow">OVERVIEW</p><h1 id="dashboard-title">Good morning</h1><p class="muted">Here’s what’s happening in your library today.</p></div>
+          <button class="button button-primary" data-go="circulation">＋ Issue a book</button>
+        </div>
+        <div class="stats-grid" id="dashboard-stats"></div>
+        <div class="dashboard-grid">
+          <article class="panel">
+            <div class="panel-heading"><div><h2>Recent activity</h2><p class="muted">Latest issues and returns</p></div><button class="text-button" data-go="reports" data-report="activity">View report <span aria-hidden="true">→</span></button></div>
+            <div id="dashboard-activity"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-heading"><div><h2>Needs attention</h2><p class="muted">Books at or below their stock threshold</p></div><span class="count-badge" id="low-stock-count">0</span></div>
+            <div id="dashboard-low-stock"></div>
+            <button class="button button-secondary full-width" data-go="reports" data-report="low-stock">View low-stock books</button>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="view-books" aria-labelledby="books-title">
+        <div class="page-intro">
+          <div><p class="eyebrow">COLLECTION</p><h1 id="books-title">Books</h1><p class="muted">Manage titles, copies, and availability.</p></div>
+          <button class="button button-primary" id="add-book">＋ Add book</button>
+        </div>
+        <article class="panel">
+          <div class="toolbar"><label class="search-box"><span aria-hidden="true">⌕</span><input id="book-search" type="search" placeholder="Search title, author, or category" aria-label="Search books"></label><span class="result-count" id="books-count"></span></div>
+          <div class="table-wrap"><table><thead><tr><th>Book</th><th>Category</th><th>Price</th><th>Copies</th><th>Availability</th><th><span class="sr-only">Actions</span></th></tr></thead><tbody id="books-body"></tbody></table></div>
+        </article>
+      </section>
+
+      <section class="view" id="view-members" aria-labelledby="members-title">
+        <div class="page-intro">
+          <div><p class="eyebrow">COMMUNITY</p><h1 id="members-title">Members</h1><p class="muted">Register members and keep contact details current.</p></div>
+          <button class="button button-primary" id="add-member">＋ Register member</button>
+        </div>
+        <article class="panel">
+          <div class="toolbar"><label class="search-box"><span aria-hidden="true">⌕</span><input id="member-search" type="search" placeholder="Search name, email, or phone" aria-label="Search members"></label><span class="result-count" id="members-count"></span></div>
+          <div class="table-wrap"><table><thead><tr><th>Member</th><th>Phone</th><th>Joined</th><th>Status</th><th><span class="sr-only">Actions</span></th></tr></thead><tbody id="members-body"></tbody></table></div>
+        </article>
+      </section>
+
+      <section class="view" id="view-circulation" aria-labelledby="circulation-title">
+        <div class="page-intro">
+          <div><p class="eyebrow">LOAN DESK</p><h1 id="circulation-title">Circulation</h1><p class="muted">Issue books to members and process returns.</p></div>
+        </div>
+        <div class="circulation-grid">
+          <article class="panel issue-panel">
+            <div class="panel-heading"><div><h2>Issue a book</h2><p class="muted">Loan period: 14 days</p></div><span class="icon-tile">↗</span></div>
+            <form id="issue-form" class="stack-form">
+              <label for="issue-book">Available book</label><select id="issue-book" required></select>
+              <label for="issue-member">Active member</label><select id="issue-member" required></select>
+              <button class="button button-primary" type="submit">Confirm issue</button>
+            </form>
+          </article>
+          <article class="panel">
+            <div class="panel-heading"><div><h2>Active issues</h2><p class="muted">Books currently checked out</p></div><span class="count-badge" id="active-issue-count">0</span></div>
+            <div id="circulation-issues"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="view-reports" aria-labelledby="reports-title">
+        <div class="page-intro">
+          <div><p class="eyebrow">INSIGHTS</p><h1 id="reports-title">Reports</h1><p class="muted">Useful snapshots of your library operations.</p></div>
+        </div>
+        <div class="report-tabs" role="tablist" aria-label="Library reports">
+          <button class="report-tab active" data-report="low-stock" role="tab" aria-selected="true">Low stock</button>
+          <button class="report-tab" data-report="active" role="tab" aria-selected="false">Active issues</button>
+          <button class="report-tab" data-report="overdue" role="tab" aria-selected="false">Overdue</button>
+          <button class="report-tab" data-report="activity" role="tab" aria-selected="false">Recent activity</button>
+        </div>
+        <article class="panel report-panel"><div class="panel-heading"><div><h2 id="report-heading">Low-stock books</h2><p class="muted" id="report-description">Titles at or below their configured stock threshold.</p></div></div><div id="report-content"></div></article>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="record-dialog" aria-labelledby="dialog-title">
+    <form method="dialog" class="dialog-close-form"><button class="icon-button close-button" aria-label="Close dialog">×</button></form>
+    <div class="dialog-heading"><p class="eyebrow" id="dialog-eyebrow">LIBRARY RECORD</p><h2 id="dialog-title"></h2><p class="muted" id="dialog-description"></p></div>
+    <form id="record-form" class="stack-form"></form>
+  </dialog>
+  <script src="app.js" defer></script>
+</body>
+</html>
